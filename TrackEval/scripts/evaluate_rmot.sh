@@ -22,9 +22,9 @@
 
 python3 run_mot_challenge.py \
 --METRICS HOTA \
---SEQMAP_FILE /data2/lgy/RMOT/work3/DKGTrack/datasets/data_path/refer-kitti-v2/seqmap.txt \
+--SEQMAP_FILE /home/stud/shuaicong/SVAG-Bench/DKGTrack_fork/datasets/data_path/refer-kitti-v2/seqmap.txt \
 --SKIP_SPLIT_FOL True \
---GT_FOLDER /data2/lgy/Dataset/RMOT/REFER-KITTI/Dataset/refer-kitti-v2/KITTI/training/image_02 \
+--GT_FOLDER /nfs/data3/shuaicong/refer-kitti-v2/KITTI/training/image_02 \
 --TRACKERS_FOLDER /data2/lgy/RMOT/work3/DKGTrack/exps/saved_models_rk/motion_1_v2/results_epoch99 \
 --GT_LOC_FORMAT {gt_folder}{video_id}/{expression_id}/gt.txt \
 --TRACKERS_TO_EVAL /data2/lgy/RMOT/work3/DKGTrack/exps/saved_models_rk/motion_1_v2/results_epoch99 \

@@ -529,10 +529,12 @@ class TransRMOT(nn.Module):
         # self.text_encoder = RobertaModel.from_pretrained(text_encoder_type)
         # self.text_encoder.pooler = None  # this pooler is never used, this is a hack to avoid DDP problems...
 
-        self.tokenizer = RobertaTokenizerFast.from_pretrained('/data2/lgy/RMOT/work3/TRMOT3_1/roberta_base/',
-                                                              local_files_only=True)
-        self.text_encoder = RobertaModel.from_pretrained('/data2/lgy/RMOT/work3/TRMOT3_1/roberta_base/',
-                                                         local_files_only=True)
+        # self.tokenizer = RobertaTokenizerFast.from_pretrained('/data2/lgy/RMOT/work3/TRMOT3_1/roberta_base/',
+        #                                                       local_files_only=True)
+        # self.text_encoder = RobertaModel.from_pretrained('/data2/lgy/RMOT/work3/TRMOT3_1/roberta_base/',
+        #                                                  local_files_only=True)
+        self.tokenizer = RobertaTokenizerFast.from_pretrained('roberta-base')
+        self.text_encoder = RobertaModel.from_pretrained('roberta-base')
         self.nlp = spacy.load('en_core_web_sm')
         freeze_text_encoder = True
 

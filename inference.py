@@ -512,7 +512,7 @@ if __name__ == '__main__':
         for expression_json in expression_jsons:
             seq_nums.append([video_id, expression_json])
 
-    thread_num = 3
+    thread_num = 4
     processes = []
 
     expression_num = len(seq_nums)
