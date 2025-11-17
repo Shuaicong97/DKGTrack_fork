@@ -328,9 +328,22 @@ class Detector(object):
         self.checkpoint_id = checkpoint_id
 
         self.seq_num = seq_num
-        img_list = os.listdir(os.path.join(self.args.rmot_path, '/data2/lgy/Dataset/RMOT/REFER-KITTI/Dataset/refer-kitti/KITTI/training/image_02/', self.seq_num[0]))
-        img_list = [os.path.join(self.args.rmot_path, '/data2/lgy/Dataset/RMOT/REFER-KITTI/Dataset/refer-kitti/KITTI/training/image_02/', self.seq_num[0], _)
-                    for _ in img_list if ('jpg' in _) or ('png' in _)]
+        if 'refer-ovis' in args.rmot_path:
+            img_list = os.listdir(os.path.join(self.args.rmot_path, 'OVIS/valid', self.seq_num[0]))
+            img_list = [os.path.join(self.args.rmot_path, 'OVIS/valid', self.seq_num[0], _)
+                        for _ in img_list if ('jpg' in _) or ('png' in _)]
+        elif 'refer-mot17' in args.rmot_path:
+            img_list = os.listdir(os.path.join(self.args.rmot_path, 'MOT17/valid', self.seq_num[0]))
+            img_list = [os.path.join(self.args.rmot_path, 'MOT17/valid', self.seq_num[0], _)
+                        for _ in img_list if ('jpg' in _) or ('png' in _)]
+        elif 'refer-mot20' in args.rmot_path:
+            img_list = os.listdir(os.path.join(self.args.rmot_path, 'MOT20/valid', self.seq_num[0]))
+            img_list = [os.path.join(self.args.rmot_path, 'MOT20/valid', self.seq_num[0], _)
+                        for _ in img_list if ('jpg' in _) or ('png' in _)]
+        else:
+            img_list = os.listdir(os.path.join(self.args.rmot_path, '/data2/lgy/Dataset/RMOT/REFER-KITTI/Dataset/refer-kitti/KITTI/training/image_02/', self.seq_num[0]))
+            img_list = [os.path.join(self.args.rmot_path, '/data2/lgy/Dataset/RMOT/REFER-KITTI/Dataset/refer-kitti/KITTI/training/image_02/', self.seq_num[0], _)
+                        for _ in img_list if ('jpg' in _) or ('png' in _)]
 
         self.img_list = sorted(img_list)
         self.img_len = len(self.img_list)
@@ -472,8 +485,18 @@ class Detector(object):
                                bbox_xyxy=tracker_outputs[:, :4],
                                identities=tracker_outputs[:, 5])
         gt_path = os.path.join(self.save_path, 'gt.txt')
-        self.write_gt(gt_path, self.json_path,
-                      os.path.join(self.args.rmot_path, 'KITTI/labels_with_ids/image_02', self.seq_num[0]), seq_h, seq_w)
+        if 'refer-ovis' in self.args.rmot_path:
+            self.write_gt(gt_path, self.json_path,
+                          os.path.join(self.args.rmot_path, 'OVIS/labels_with_ids/valid', self.seq_num[0]), seq_h, seq_w)
+        if 'refer-mot17' in self.args.rmot_path:
+            self.write_gt(gt_path, self.json_path,
+                          os.path.join(self.args.rmot_path, 'MOT17/labels_with_ids/valid', self.seq_num[0]), seq_h, seq_w)
+        if 'refer-mot20' in self.args.rmot_path:
+            self.write_gt(gt_path, self.json_path,
+                          os.path.join(self.args.rmot_path, 'MOT20/labels_with_ids/valid', self.seq_num[0]), seq_h, seq_w)
+        if 'refer-kitti' in self.args.rmot_path:
+            self.write_gt(gt_path, self.json_path,
+                          os.path.join(self.args.rmot_path, 'KITTI/labels_with_ids/image_02', self.seq_num[0]), seq_h, seq_w)
         print("totally {} dts {} occlusion dts".format(total_dts, total_occlusion_dts))
 
 def sub_processor(pid,seq_nums,args):
@@ -503,6 +526,30 @@ if __name__ == '__main__':
     expressions_root = os.path.join(args0.rmot_path, 'expression')
     if "refer-kitti-v2" in args0.rmot_path:
         video_ids = ['0005', '0011', '0013','0019']
+    elif "refer-ovis" in args0.rmot_path:
+        # 137 valid videos
+        video_ids = ['c34989e3', 'ac8ecb27', 'af48b2f9', '15e09c8c', '505ed57c', '7223bf62', 'c9a2645e', '2112a80d',
+                     'fb57abac', 'f10e23dd', '48cd08af', '1a4b95d3', '63263f3f', '6a47103e', '2a02f752', '9069547d',
+                     '2d802cb8', '68d9fb6a', '95a50b7d', '2ca20519', 'e7ef3b9d', 'ed82ce50', '0299d8d6', 'd33e1c97',
+                     '4d63d7df', 'ca440c64', 'e568ca41', '2b84174e', '95718597', '4d6a99ec', 'c705c014', '3c4f150c',
+                     '97f5bbc8', '7a8cfc91', '90d7f538', 'a42fcfa9', 'ff64095e', 'aa925437', 'f9bee2e2', '1aa4e7f6',
+                     '30446667', '2b6e117d', 'b8e00b22', '1b664206', '429d96d4', '2ab06287', '19615388', '2c22cd4e',
+                     '35dff164', '012b09a0', 'd4f4cf55', '6976cf19', 'd3ba30b3', 'd50fa72e', '1f17cd7c', 'd501f685',
+                     '2a19d8a2', 'c89239d8', 'c4fd77f2', '75a8cadb', '3c5e3be8', 'a5249886', '8b935b9f', 'f4b271d4',
+                     'ef81cd52', 'a10de0fc', '9ed568e9', 'b643add8', 'd084134f', 'ec6fd219', '6073aa21', 'ed5ec3c5',
+                     '71d35513', '3d8b1ee0', '4027a35b', '06eb2803', '2b827e3a', '1ef6cb7b', 'a16e9661', '69398c01',
+                     '257cca89', 'e78253f1', 'c587e43b', 'd41a62d4', '768c5810', 'a74b52eb', 'caf53839', 'c4ecad66',
+                     '2cc7839e', 'c7543b31', 'b7b9f632', 'cfff47c3', 'ba5644c3', '2bd72d60', 'aaa8bd16', 'd26036cd',
+                     '6a6547d7', 'bd34e772', '86b8e4ec', '39f0d139', '435d99e0', 'e0a22a9b', '5251dbb9', 'b87840e1',
+                     '9323c19c', '3054dbaf', 'c7b07fea', 'a87bbd47', 'e3d901dd', 'b692e3cb', '2d0f3000', 'b97c4e2b',
+                     '567bfc5a', 'd0a07d68', 'f6cdaca7', '9b318a9c', '1806a28d', '5834b092', '3d04522a', '15e281a9',
+                     '1220b722', '454c7bb5', '44a4d836', '957c33a7', '0d0030a7', 'aa8df541', 'fb4a7958', 'c29ce49d',
+                     '6312935f', '817263d6', 'c9dfbd0c', '1123fd76', 'cfe04aff', '6c88a53b', 'f326bfb7', '7e52df6a',
+                     'ebd1dbad']
+    elif "refer-mot17" in args0.rmot_path:
+        video_ids = ['MOT17-01', 'MOT17-03', 'MOT17-06', 'MOT17-07', 'MOT17-08', 'MOT17-12', 'MOT17-14']
+    elif "refer-mot20" in args0.rmot_path:
+        video_ids = ['MOT20-03', 'MOT20-05']
     else:
         video_ids = ['0005', '0011', '0013']
 
