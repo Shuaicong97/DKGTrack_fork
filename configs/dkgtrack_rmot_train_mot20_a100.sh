@@ -1,3 +1,11 @@
+#!/bin/bash -l
+
+#SBATCH --job-name=dkgtrack_train_with_mot20_a100
+#SBATCH --time=24:00:00
+#SBATCH --gres=gpu:a100:4
+#SBATCH --output=/home/atuin/v100dd/v100dd19/sbatch_dkgtrack/result-%x-%j.txt
+#SBATCH -C a100_80
+
 PRETRAIN=/home/atuin/v100dd/v100dd19/TempRMOT/r50_deformable_detr_plus_iterative_bbox_refinement-checkpoint.pth
 EXP_DIR=saved_models_rk/motion
 OUT='/home/atuin/v100dd/v100dd19/dkgtrack/outputs'
@@ -33,8 +41,8 @@ python3  -m torch.distributed.launch --nproc_per_node=4 --master_port 29505 \
    --random_drop 0.1 \
    --fp_ratio 0.3 \
    --query_interaction_layer QIM \
-   --rmot_path /home/atuin/v100dd/v100dd19/TempRMOT/final_files/refer-ovis \
-   --data_txt_path_train ./datasets/data_path/refer-ovis.train \
+   --rmot_path /home/atuin/v100dd/v100dd19/TempRMOT/final_files/refer-mot20 \
+   --data_txt_path_train ./datasets/data_path/refer-mot20.train \
    --hist_len 5 \
    --refer_loss_coef 2 | tee -a ${TRAIN_LOG_FILE}
 
