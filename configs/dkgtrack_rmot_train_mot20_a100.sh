@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --job-name=dkgtrack_train_with_mot20_a100
+#SBATCH --job-name=dkgtrack_mot20
 #SBATCH --time=24:00:00
 #SBATCH --gres=gpu:a100:4
 #SBATCH --output=/home/atuin/v100dd/v100dd19/sbatch_dkgtrack/result-%x-%j.txt

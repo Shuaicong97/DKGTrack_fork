@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --job-name=dkgtrack_train_with_ovis_a40
+#SBATCH --job-name=dkgtrack_ovis
 #SBATCH --time=24:00:00
 #SBATCH --gres=gpu:a40:4
 #SBATCH --output=/home/atuin/v100dd/v100dd19/sbatch_dkgtrack/result-%x-%j.txt

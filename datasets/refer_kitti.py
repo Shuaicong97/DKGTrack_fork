@@ -218,7 +218,7 @@ class DetMOTDetection:
             video_id = img_path.split('/')[-2]
             expression_list = os.listdir(osp.join(self.args.rmot_path, 'expression/training', video_id))
             expression_random = random.choice(expression_list)  # 某张照片随便获取一个语义表达式
-            expression_path = osp.join(self.args.rmot_path, 'expression', video_id, expression_random)
+            expression_path = osp.join(self.args.rmot_path, 'expression/training', video_id, expression_random)
             with open(expression_path, 'r') as f:
                 expression_info = json.load(f)
             sentence = [expression_info['sentence']]
