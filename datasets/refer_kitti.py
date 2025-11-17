@@ -118,7 +118,7 @@ class DetMOTDetection:
         assert w > 0 and h > 0, "invalid image {} with shape {} {}".format(img_path, w, h)
         if osp.isfile(label_path):
             labels0 = np.loadtxt(label_path, dtype=np.float32).reshape(-1, 6)
-            if 'KITTI' in label_path:
+            if any(x in label_path for x in ['OVIS', 'KITTI', 'MOT']):
                 # normalized x1y1wh to pixel xyxy format
                 labels = labels0.copy()
                 labels[:, 2] = w * (labels0[:, 2])
@@ -139,6 +139,12 @@ class DetMOTDetection:
 
         if 'KITTI' in img_path:
             targets['dataset'] = 'KITTI'
+        elif 'OVIS' in img_path:
+            targets['dataset'] = 'OVIS'
+        elif 'MOT17' in img_path:
+            targets['dataset'] = 'MOT17'
+        elif 'MOT20' in img_path:
+            targets['dataset'] = 'MOT20'
         else:
             raise NotImplementedError()
 
@@ -208,6 +214,15 @@ class DetMOTDetection:
                 expression_info = json.load(f)
             sentence = [expression_info['sentence']]
             expression_info = [expression_info]
+        elif any(x in img_path for x in ['OVIS', 'MOT']):
+            video_id = img_path.split('/')[-2]
+            expression_list = os.listdir(osp.join(self.args.rmot_path, 'expression/training', video_id))
+            expression_random = random.choice(expression_list)  # 某张照片随便获取一个语义表达式
+            expression_path = osp.join(self.args.rmot_path, 'expression', video_id, expression_random)
+            with open(expression_path, 'r') as f:
+                expression_info = json.load(f)
+            sentence = [expression_info['sentence']]
+            expression_info = [expression_info]
         else:
             raise NotImplementedError()
 
@@ -271,11 +286,87 @@ def make_transforms_for_kitti(image_set, args=None):
 
     raise ValueError(f'unknown {image_set}')
 
+def make_transforms_for_ovis(image_set, args=None):
+
+    normalize = T.MotCompose([
+        T.MotToTensor(),
+        T.MotNormalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    scales = [288, 320, 352, 392, 416, 448, 480, 512]
+
+    if image_set == 'train':
+        return T.MotCompose([
+            T.MotRandomSelect(
+                T.MotRandomResize(scales, max_size=768),
+                T.MotCompose([
+                    T.MotRandomResize([400, 500, 600]),
+                    T.FixedMotRandomCrop(384, 600),
+                    T.MotRandomResize(scales, max_size=768),
+                ])
+            ),
+            normalize,
+        ])
+
+    if image_set == 'val':
+        return T.MotCompose([
+            # T.MotRandomResize([800], max_size=1333),
+            T.RandomResize([360], max_size=640),
+            normalize,
+        ])
+
+    raise ValueError(f'unknown {image_set}')
+
+def make_transforms_for_mot17(image_set, args=None):
+
+    normalize = T.MotCompose([
+        T.MotToTensor(),
+        T.MotNormalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    scales = [608, 640, 672, 704, 736, 768, 800, 832, 864, 896, 928, 960, 992]
+
+    if image_set == 'train':
+        return T.MotCompose([
+            T.MotRandomHorizontalFlip(),
+            T.MotRandomSelect(
+                T.MotRandomResize(scales, max_size=1536),
+                T.MotCompose([
+                    T.MotRandomResize([400, 500, 600]),
+                    T.FixedMotRandomCrop(384, 600),
+                    T.MotRandomResize(scales, max_size=1536),
+                ])
+            ),
+            normalize,
+        ])
+
+    if image_set == 'val':
+        return T.MotCompose([
+            T.MotRandomResize([800], max_size=1333),
+            normalize,
+        ])
+
+    raise ValueError(f'unknown {image_set}')
+
 
 def build_dataset2transform(args, image_set):
-
     kitti_train = make_transforms_for_kitti('train', args)
-    dataset2transform_train = {'KITTI': kitti_train}
+    mot17_train = make_transforms_for_mot17('train', args)
+    mot20_train = make_transforms_for_kitti('train', args)
+    ovis_train = make_transforms_for_ovis('train', args)
+
+    print(f'args.rmot_path: {args.rmot_path}')
+    if 'refer-mot17' in args.rmot_path:
+        print(f'args.rmot_path is mot17')
+        dataset2transform_train = {'MOT17': mot17_train}
+    elif 'refer-mot20' in args.rmot_path:
+        print(f'args.rmot_path is mot20')
+        dataset2transform_train = {'MOT20': mot20_train}
+    elif 'refer-ovis' in args.rmot_path:
+        print(f'args.rmot_path is ovis')
+        dataset2transform_train = {'OVIS': ovis_train}
+    else:
+        print(f'args.rmot_path is kitti')
+        dataset2transform_train = {'KITTI': kitti_train}
+
     if image_set == 'train':
         return dataset2transform_train
     else:
