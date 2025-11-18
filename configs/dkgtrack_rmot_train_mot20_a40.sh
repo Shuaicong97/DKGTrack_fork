@@ -6,7 +6,7 @@
 #SBATCH --output=/home/atuin/v100dd/v100dd19/sbatch_dkgtrack/result-%x-%j.txt
 
 PRETRAIN=/home/atuin/v100dd/v100dd19/TempRMOT/r50_deformable_detr_plus_iterative_bbox_refinement-checkpoint.pth
-EXP_DIR=saved_models_rk/motion
+EXP_DIR=mot20_a40
 OUT='/home/atuin/v100dd/v100dd19/dkgtrack/outputs'
 TRAIN_LOG_FILE="$OUT/${EXP_DIR}/train_log.txt"
 PID_FILE="$OUT/${EXP_DIR}/train_pid.txt"
