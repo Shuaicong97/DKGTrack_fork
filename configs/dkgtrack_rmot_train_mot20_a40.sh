@@ -43,6 +43,7 @@ python3  -m torch.distributed.launch --nproc_per_node=4 --master_port 29505 \
    --rmot_path /home/atuin/v100dd/v100dd19/TempRMOT/final_files/refer-mot20 \
    --data_txt_path_train ./datasets/data_path/refer-mot20.train \
    --hist_len 5 \
-   --refer_loss_coef 2 | tee -a ${TRAIN_LOG_FILE}
+   --refer_loss_coef 2 \
+   --resume /home/atuin/v100dd/v100dd19/dkgtrack/outputs/mot20_a40/checkpoint.pth | tee -a ${TRAIN_LOG_FILE}
 
 
