@@ -194,8 +194,12 @@ class MotChallenge2DBox(_BaseDataset):
                         img_path = os.path.join('/home/atuin/v100dd/v100dd19/TempRMOT/final_files/refer-mot20/MOT20/valid', seq)
                         img_list = os.listdir(img_path)
                         seq_lengths[row[0]] = int(len(img_list))
-                    else:
+                    elif 'OVIS' in seq:
                         img_path = os.path.join('/home/atuin/v100dd/v100dd19/TempRMOT/final_files/refer-ovis/OVIS/valid', seq)
+                        img_list = os.listdir(img_path)
+                        seq_lengths[row[0]] = int(len(img_list))
+                    else:
+                        img_path = os.path.join('/data/Dataset/refer-kitti/KITTI/training/image_02', seq)
                         img_list = os.listdir(img_path)
                         seq_lengths[row[0]] = int(len(img_list))
         return seq_list, seq_lengths

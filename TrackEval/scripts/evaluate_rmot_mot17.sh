@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --job-name=dkgtrack_ovis_eval
+#SBATCH --job-name=dkgtrack_mot17_eval
 #SBATCH --time=24:00:00
 #SBATCH --gres=gpu:a40:1
 #SBATCH --output=/home/atuin/v100dd/v100dd19/sbatch_dkgtrack/result-%x-%j.txt
@@ -29,12 +29,12 @@
 
 python3 run_mot_challenge.py \
 --METRICS HOTA \
---SEQMAP_FILE /home/hpc/v100dd/v100dd19/projects/DKGTrack_fork/datasets/data_path/seqmap_ovis.txt \
+--SEQMAP_FILE /home/hpc/v100dd/v100dd19/projects/DKGTrack_fork/datasets/data_path/seqmap_mot17.txt \
 --SKIP_SPLIT_FOL True \
---GT_FOLDER /home/atuin/v100dd/v100dd19/TempRMOT/final_files/refer-ovis/OVIS/valid \
---TRACKERS_FOLDER /home/atuin/v100dd/v100dd19/dkgtrack/outputs/ovis_a40/results_epoch99 \
+--GT_FOLDER /home/atuin/v100dd/v100dd19/TempRMOT/final_files/refer-mot17/MOT17/valid \
+--TRACKERS_FOLDER /home/atuin/v100dd/v100dd19/dkgtrack/outputs/mot17_a40/results_epoch99 \
 --GT_LOC_FORMAT {gt_folder}{video_id}/{expression_id}/gt.txt \
---TRACKERS_TO_EVAL /home/atuin/v100dd/v100dd19/dkgtrack/outputs/ovis_a40/results_epoch99 \
+--TRACKERS_TO_EVAL /home/atuin/v100dd/v100dd19/dkgtrack/outputs/mot17_a40/results_epoch99 \
 --USE_PARALLEL True \
 --NUM_PARALLEL_CORES 2 \
 --SKIP_SPLIT_FOL True \

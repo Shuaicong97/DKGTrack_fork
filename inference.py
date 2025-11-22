@@ -348,7 +348,7 @@ class Detector(object):
         self.img_list = sorted(img_list)
         self.img_len = len(self.img_list)
 
-        self.json_path = os.path.join(self.args.rmot_path, 'expression', seq_num[0], seq_num[1])
+        self.json_path = os.path.join(self.args.rmot_path, 'expression/valid', seq_num[0], seq_num[1])
         with open(self.json_path, 'r') as f:
             json_info = json.load(f)
         self.json_info = json_info
@@ -555,7 +555,7 @@ if __name__ == '__main__':
 
     seq_nums = [] 
     for video_id in video_ids:  
-        expression_jsons = sorted(os.listdir(os.path.join(expressions_root, video_id)))
+        expression_jsons = sorted(os.listdir(os.path.join(expressions_root, 'valid', video_id)))
         for expression_json in expression_jsons:
             seq_nums.append([video_id, expression_json])
 
